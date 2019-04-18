@@ -1,20 +1,61 @@
 require 'colorize'
 require 'pry'
-# require_relative '../app/models/guest'
 require 'date'
 
 def welcome
+   system "clear"
    art = TTY::Font.new(:starwars) 
-   puts art.write("Welcome")   
-   puts art.write("To")   
+   # puts art.write("Welcome")   
+   # puts art.write("To")   
    puts art.write("My Bookings!")   
+   sleep 1
+   sign_or_log
 end 
 
-def signin
+def sign_or_log
+   prompt = TTY::Prompt.new
+   test = prompt.select("Sign-up or Login!") do |book|
+   # book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
+   # binding.pry
+    book.choice 'Sign-up', 1
+    book.choice 'Login', 2
+   end 
+    if test == 1
+        signup
+    else 
+        login
+ end 
+end 
+
+def signup
    puts "Sign up with your name."
    input = gets.chomp
    puts "Hello, #{input}. You are signed-in!"
    @user = Guest.create(username: input)
+   sleep 1
+   welcome_menu
+end 
+
+def login
+   puts "Enter your username"
+   input = gets.chomp
+   @user = Guest.find_by(username: input)
+   if @user == input
+      puts "Hello, #{input}. You are signed-in!"
+      welcome_menu
+   else
+      prompt = TTY::Prompt.new
+      test = prompt.select("It doesn't look like you are in the system. Would you like to retry loggin in or sign up?".colorize(:yellow)) do |book|
+       sleep 1
+       book.choice 'Retry loggin in', 1
+       book.choice 'Signup', 2
+      end 
+      if test == 1
+         login
+     else 
+         signup
+      end 
+   end
 end 
 
 def welcome_menu
@@ -27,14 +68,15 @@ def welcome_menu
     end 
    #  binding.pry
      if test == 1
-         checkin_validator
+      checkin_validator
      else 
-         exit_method
+      exit_method
   end 
 end 
 
   def main_menu
    prompt = TTY::Prompt.new
+    arr = 
     test = prompt.select("Please choose one of the following:") do |book|
    #   book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
 # binding.pry
@@ -44,7 +86,6 @@ end
      book.choice 'Delete Booking', 4
      book.choice 'Exit', 5
     end 
-
    #  binding.pry
      if test == 1
          checkin_validator
@@ -96,11 +137,12 @@ end
 def option_1(checkin, checkout)
    system "clear"
    prompt = TTY::Prompt.new
+   # Room.display_names
    test = prompt.select("Please choose from the following available rooms:") do |room|
  
    room.choice "#{Room.first.room_type}", 1
-   room.choice "#{Room.all[1].room_type}", 2
-   room.choice "#{Room.all[2].room_type}", 3
+   room.choice "#{Room.second.room_type}", 2
+   room.choice "#{Room.third.room_type}", 3
    room.choice "#{Room.last.room_type}", 4
    end
    # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: user.id)
@@ -114,13 +156,13 @@ def option_1(checkin, checkout)
       # binding.pry
    elsif test == 2
       puts "You have picked #{selected_room_two}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
-      temp = Room.all[1].id
+      temp = Room.second.id
       # booking.room_id = Room.all[1].id
       # new_user.room_id = Room.all[1].id
       # binding.pry
    elsif test == 3
       puts "You have picked #{selected_room_three}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
-      temp = Room.all[2].id
+      temp = Room.third.id
       # booking.room_id = Room.all[2].id
       # new_user.room_id = Room.all[2].id
    else test == 4
@@ -136,7 +178,6 @@ def option_1(checkin, checkout)
    # binding.pry
    main_menu
 end 
-
 
 def selected_room_one
    Room.first.room_type.colorize(:pink)
@@ -169,8 +210,8 @@ def update_booking
          # binding.pry
          # update.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
          update.choice "#{Room.first.room_type}", 1
-         update.choice "#{Room.all[1].room_type}", 2
-         update.choice "#{Room.all[2].room_type}", 3
+         update.choice "#{Room.second.room_type}", 2
+         update.choice "#{Room.third.room_type}", 3
          update.choice "#{Room.last.room_type}", 4
      end  #  options
      if test == 1
@@ -191,9 +232,10 @@ def update_booking
      main_menu
 end
 
-def booking
+def view_booking
    a = Booking.all.find_by(guest_id: @user.id)
-      a.room.room_type
+      "YOU ARE BOOKED IN: #{a.room.room_type}. CHECKIN DATE: #{a.checkin_date} CHECKOUT DATE: #{a.checkout_date}".colorize(:magenta)
+   #single source of truth {a.room.room_type}
       # binding.pry
    end 
 
@@ -205,7 +247,7 @@ def display_account_info
    else
       puts "Bookings:"
    end 
-puts booking
+puts view_booking
 main_menu
 # binding.pry  
 end
@@ -220,8 +262,12 @@ end
 
    def exit_method
       system "clear"
-      puts "Thank you for using my booking!".colorize(:cyan)
+      art = TTY::Font.new(:starwars) 
+      puts art.write("Thank You")   
+      puts art.write("For Using")   
+      puts art.write("My Bookings!")   
       exit
    end
+
 
 

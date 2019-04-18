@@ -1,19 +1,14 @@
 require_relative '../config/environment'
-require_relative './run.rb'
+require_relative './tester.rb'
 
 welcome
-signin
-welcome_menu
-main_menu
+
+# welcome_menu
+# main_menu
 
 
 
 
-
-# user = signin
-# choice = options
-
-    
 
 # while options != 5 do
 #     options
