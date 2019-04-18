@@ -1,5 +1,5 @@
 require_relative '../config/environment'
-require_relative './tester.rb'
+require_relative './methods.rb'
 
 welcome
 

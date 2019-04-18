@@ -13,6 +13,8 @@ def welcome
 end 
 
 def sign_or_log
+   # Guest.get_first_room
+   # binding.pry
    prompt = TTY::Prompt.new
    test = prompt.select("Sign-up or Login!") do |book|
    # book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
@@ -102,17 +104,17 @@ end
 
 def checkin_validator
    prompt = TTY::Prompt.new
-   prompt.ask("Please type in a checkin date in the following format on the next line: (yyyymmdd)")
+   prompt.ask("Please type in a checkin date in the following format on the next line: (yyyymmdd)" )#, default: Date.parse(Date.today).strftime("%Y%m%d"))
    date1 = gets.chomp
    checkin = ""
-   if date1 =~ /[0-9]/ && date1.size == 8 
-      date1 = Date.parse(date1).strftime("%Y%m%d")
+   if date1 =~ /[0-9]/ && date1.size == 8 # if the date includes the number btwn 0-9 (regex) and date.length == 8
+      # date1 = Date.parse(date1).strftime("%Y%m%d") #user input date1 from the format (yyyymmmdd), then parsing it -> changing the data type from the user input into the 
       checkin = "#{date1.to_date}"
    puts "Ok, your checkin date is #{date1.to_date}!".colorize(:magenta)
    checkout_validator(checkin)
    else  
-      puts "Invalid date format, try again please!"
-      sleep 2
+      puts "Invalid date format, try again please!".colorize(:green)
+      sleep 1
       checkin_validator
    end 
 end
@@ -122,14 +124,21 @@ end
    prompt.ask("Please type in a checkout date in the following format: (yyyymmdd)")
    date2 = gets.chomp
    checkout = ""
-   if date2 =~ /[0-9]/ && date2.size == 8 && Date.parse(date2).strftime("%Y%m%d") != checkin
-      date2 = Date.parse(date2).strftime("%Y%m%d")
+   if date2 =~ /[0-9]/ && date2.size == 8 && date2.to_date != checkin
+      # date2 = Date.parse(date2).strftime("%Y%m%d")
       checkout = "#{date2.to_date}"
    puts "Ok, your checkout date is #{checkout}!".colorize(:magenta)
+   art = TTY::Font.new(:starwars) 
+   puts art.write("Almost done")   
+   puts art.write("booking...")   
+   puts art.write("just a bit") 
+   puts art.write("more to go...")     
+      sleep 3
+      system "clears"
       option_1(checkin, checkout)
    else  
-      puts "Invalid date format, try again please!"
-      sleep 2
+      puts "Invalid date format, try again please!".colorize(:green)
+      sleep 1
       checkout_validator(checkin)
    end 
  end 
@@ -141,6 +150,7 @@ def option_1(checkin, checkout)
    test = prompt.select("Please choose from the following available rooms:") do |room|
  
    room.choice "#{Room.first.room_type}", 1
+   # binding.pry
    room.choice "#{Room.second.room_type}", 2
    room.choice "#{Room.third.room_type}", 3
    room.choice "#{Room.last.room_type}", 4
@@ -152,22 +162,30 @@ def option_1(checkin, checkout)
    if test == 1
       puts "You have picked #{selected_room_one}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
       temp = Room.first.id
+      art = TTY::Font.new(:starwars) 
+      puts art.write("You Are Booked!")  
       # new_user.room_id = Room.first.id
       # binding.pry
    elsif test == 2
       puts "You have picked #{selected_room_two}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
       temp = Room.second.id
+      art = TTY::Font.new(:starwars) 
+      puts art.write("You Are Booked!")  
       # booking.room_id = Room.all[1].id
       # new_user.room_id = Room.all[1].id
       # binding.pry
    elsif test == 3
       puts "You have picked #{selected_room_three}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
       temp = Room.third.id
+      art = TTY::Font.new(:starwars) 
+      puts art.write("You Are Booked!")  
       # booking.room_id = Room.all[2].id
       # new_user.room_id = Room.all[2].id
    else test == 4
       puts "You have picked #{selected_room_four}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
       temp = Room.last.id
+      art = TTY::Font.new(:starwars) 
+      puts art.write("You Are Booked!")  
       # booking.room_id = Room.last.id
       # new_user.room_id = Room.last.id
       #binding.pry
@@ -234,8 +252,20 @@ end
 
 def view_booking
    a = Booking.all.find_by(guest_id: @user.id)
-      "YOU ARE BOOKED IN: #{a.room.room_type}. CHECKIN DATE: #{a.checkin_date} CHECKOUT DATE: #{a.checkout_date}".colorize(:magenta)
+      # "YOU ARE BOOKED IN: #{a.room.room_type}. CHECKIN DATE: #{a.checkin_date} CHECKOUT DATE: #{a.checkout_date}".colorize(:magenta)
    #single source of truth {a.room.room_type}
+   art = TTY::Font.new(:standard) 
+   puts art.write("NAME: #{a.guest.username.upcase}")  
+   puts art.write("BOOKING ID: #{a.guest.id}")  
+   art = TTY::Font.new(:standard) 
+   puts art.write("Enjoy your stay in")  
+   art = TTY::Font.new(:straight) 
+   puts art.write("#{a.room.room_type}!")  
+   art = TTY::Font.new(:standard) 
+   puts art.write("From  #{a.checkin_date}!")   
+   puts art.write("until #{a.checkout_date}")  
+   # puts art.write("For Using")   
+   # puts art.write("My Bookings!")   
       # binding.pry
    end 
 
@@ -245,7 +275,7 @@ def display_account_info
    if @user.bookings.count == 0
       puts "You have no bookings!"
    else
-      puts "Bookings:"
+      puts "Account Information:"
    end 
 puts view_booking
 main_menu
