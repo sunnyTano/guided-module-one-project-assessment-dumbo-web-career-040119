@@ -13,14 +13,6 @@ def signin
    @user = Guest.create(username: input)
 end 
 
-# def name
-#    puts "What is your name?"
-#    name = gets.chomp
-#    puts "Welcome #{name}!"
-#    user = Guest.create(username: name)
-#    user_id = Booking.create(guest_id: user.id)
-#   end
-
   def options
    prompt = TTY::Prompt.new
     test = prompt.select("Please choose one of the following:") do |book|
@@ -40,18 +32,13 @@ end
      elsif test == 3
          display_account_info
      elsif test == 4
-      delete
+         delete
      elsif test == 5
-       ex
+         ex
   end 
 end 
  
 def option_1
-   # puts "What is your name?"
-   # name = gets.chomp
-   # puts "Welcome #{name}!"
-   # user = Guest.create(username: name)
-   # binding.pry
    system "clear"
    # find_and_update_booking
    prompt = TTY::Prompt.new
@@ -104,6 +91,7 @@ def option_1
       #binding.pry
    end 
    # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: @user.id, room_id: temp)
+   @user.bookings = []
    @user.bookings << Booking.new_booking(checkin, checkout, @user, temp)
    # binding.pry
    options
@@ -128,18 +116,6 @@ end
 
 def option_2
    update_booking
-   # system "clear"
-   # # Room.display_users_bookings
-   #    selected = select_room 
-   #    prompt = TTY::Prompt.new
-   #   test =  prompt.select("Please choose one of the following to update:") do |update|
-   #       # update.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
-   #      update.choice 'Change Room', 1
-   #      update.choice 'Cancel Reservation', 2
-   #   end 
-   #   if test == 1
-   #    update_booking
-   #   end 
    end   #  options
 # end
 
@@ -153,19 +129,19 @@ def option_2
 #    end 
 
 def update_booking
-   puts "Please enter your sign-in name:"
-   input = gets.chomp
-   search = Guest.find_by(username: input)
+   # puts "Please enter your sign-in name:"
+   # input = gets.chomp
+   # search = Guest.find_by(username: input)
    # find_booking = Booking.find_by(guest_id: Guest.find_by(username: input).id)
    # find_booking.update(room_id: 63)
-   puts "Let's change your booking, #{input}"
-     result = search.rooms.each do |room|
+   # puts "Let's change your booking, #{input}"
+     result = @user.rooms.each do |room|
         puts "Here is your booking: #{room.room_type}!".colorize(:yellow)
          end 
    user_bookings = @user.bookings
       prompt = TTY::Prompt.new
       test = prompt.select("Please choose a new room:") do |update|
-         binding.pry
+         # binding.pry
          # update.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
          update.choice "#{Room.first.room_type}", 1
          update.choice "#{Room.all[1].room_type}", 2
@@ -187,18 +163,30 @@ def update_booking
    end 
    #   binding.pry
      user_bookings.update(room_id: temp)
+     options
 end
 
+def booking
+   a = Booking.all.find_by(guest_id: @user.id)
+   # binding.pry
+   # @user.rooms.map do |room|
+   #    "#{room.room_type}"
+      # binding.pry
+      a.room.room_type
+      options
+   end 
+
+
 def display_account_info
-   puts "please enter your signin name"
-   input = gets.chomp
-   search = Guest.find_by(username: input)
-   binding.pry
-   puts search.bookings
-
-end 
-
-
+   system "clear"
+   if @user.bookings.count == 0
+      puts "You have no bookings!"
+   else
+      puts "Bookings:"
+   end 
+puts booking
+# binding.pry  
+end
 
 def delete
    system "clear"
@@ -214,37 +202,15 @@ def delete
    user_bookings = @user.bookings
    user_bookings.destroy
     puts "You have deleted your booking!".colorize(:cyan)
+    option
    end 
 
-def ex
-system "clear"
-puts "thank you for using my booking!".colorize(:cyan)
-system("^C")
-end 
-
-# def bookings
-#    @user.rooms.map do |room|
-#       binding.pry
-#       #{room.room_type}"
-# end 
-
-#    def see_bookings
-#       system "clear"
-#       if user.rooms.count == 0
-#         puts "You have no bookings!".colorize(:red)
-#       else
-#         puts "Bookings:".colorize(:cyan)
-#       end
-#       puts bookings(user)
-#       options
-#     end
-#    end 
-
-# Room.booking.guest
-
-
+   def ex
+      system "clear"
+      puts "Thank you for using my booking!".colorize(:cyan)
+      system("^C")
+   end 
 # Booking.find_by(guest_id: Guest.id)
-
 
 # def find_and_update_booking
 # room_id_num = Booking.last.room_id
@@ -255,8 +221,6 @@ end
 #    puts room_name
 # end 
 # end 
-
-
 # end 
 
 
