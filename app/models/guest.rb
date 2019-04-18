@@ -12,10 +12,19 @@ class Guest < ActiveRecord::Base
 # #    welcome_menu
 #     end 
 
-# def Guest.get_first_room
+# def self.get_first_room
 #     self.rooms.first 
 #     binding.pry
 # end 
+#instance methods can only be use within the current instance in the Guest class then 
+
+# @@ll = []
+
+# def self.all
+#     @@all
+# end 
+
+
 
 end 
 

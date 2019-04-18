@@ -63,7 +63,6 @@ end
 def welcome_menu
    prompt = TTY::Prompt.new
     test = prompt.select("Please choose one of the following:") do |book|
-   #   book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
 # binding.pry
      book.choice 'Book a Room!', 1
      book.choice 'Exit', 2
@@ -80,7 +79,6 @@ end
    prompt = TTY::Prompt.new
     arr = 
     test = prompt.select("Please choose one of the following:") do |book|
-   #   book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
 # binding.pry
      book.choice 'Book a Room!', 1
      book.choice 'Update Booking', 2
@@ -148,7 +146,6 @@ def option_1(checkin, checkout)
    prompt = TTY::Prompt.new
    # Room.display_names
    test = prompt.select("Please choose from the following available rooms:") do |room|
- 
    room.choice "#{Room.first.room_type}", 1
    # binding.pry
    room.choice "#{Room.second.room_type}", 2
@@ -179,15 +176,11 @@ def option_1(checkin, checkout)
       temp = Room.third.id
       art = TTY::Font.new(:starwars) 
       puts art.write("You Are Booked!")  
-      # booking.room_id = Room.all[2].id
-      # new_user.room_id = Room.all[2].id
    else test == 4
       puts "You have picked #{selected_room_four}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
       temp = Room.last.id
       art = TTY::Font.new(:starwars) 
       puts art.write("You Are Booked!")  
-      # booking.room_id = Room.last.id
-      # new_user.room_id = Room.last.id
       #binding.pry
    end 
    # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: @user.id, room_id: temp)
@@ -255,8 +248,10 @@ def view_booking
       # "YOU ARE BOOKED IN: #{a.room.room_type}. CHECKIN DATE: #{a.checkin_date} CHECKOUT DATE: #{a.checkout_date}".colorize(:magenta)
    #single source of truth {a.room.room_type}
    art = TTY::Font.new(:standard) 
-   puts art.write("NAME: #{a.guest.username.upcase}")  
-   puts art.write("BOOKING ID: #{a.guest.id}")  
+   # puts art.write("NAME: #{a.guest.username.upcase}")  
+   puts art.write("NAME: #{Booking.view_username(@user)}") 
+   # binding.pry
+   puts art.write("BOOKING ID: #{a.id}")  
    art = TTY::Font.new(:standard) 
    puts art.write("Enjoy your stay in")  
    art = TTY::Font.new(:straight) 
