@@ -3,7 +3,6 @@ require 'pry'
 # require_relative '../app/models/guest'
 require 'date'
 
-
 def welcome
    art = TTY::Font.new(:starwars) 
    puts art.write("Welcome")   
@@ -17,7 +16,6 @@ def signin
    puts "Hello, #{input}. You are signed-in!"
    @user = Guest.create(username: input)
 end 
-
 
 def welcome_menu
    prompt = TTY::Prompt.new
@@ -91,43 +89,12 @@ end
    else  
       puts "Invalid date format, try again please!"
       sleep 2
-      checkout_validator
+      checkout_validator(checkin)
    end 
  end 
 
 def option_1(checkin, checkout)
    system "clear"
-   # checkin_validator
-   # checkout_validator
-   # find_and_update_booking
-   # prompt = TTY::Prompt.new
-   # prompt.ask("Please type in a checkin date in the following format on the next line: (yyyymmdd)")
-   # date1 = gets.chomp
-   # checkin = ""
-   # if date1 =~ /[0-9]/ && date1.size == 8 
-   #    date1 = Date.parse(date1).strftime("%Y%m%d")
-   #    checkin = "#{date1.to_date}"
-   # puts "Ok, your checkin date is #{date1.to_date}!".colorize(:magenta)
-   # else  
-   #    puts "Invalid date format, try again please!"
-   #    sleep 3
-   #    option_1
-   # end 
-
-
-   # prompt.ask("Please type in a checkout date in the following format: (yyyymmdd)")
-   # date2 = gets.chomp
-   # checkin = ""
-   # if date2 =~ /[0-9]/ && date2.size == 8
-   #    date2 = Date.parse(date2).strftime("%Y%m%d")
-   #    checkout = "#{date2.to_date}"
-   # puts "Ok, your checkin date is #{date2.to_date}!".colorize(:magenta)
-   # else  
-   #    puts "Invalid date format, try again please!"
-   #    sleep 3
-   #    option_1
-   # end 
-   # puts "Ok, your checkout date is #{date2.to_date}!".colorize(:magenta)
    prompt = TTY::Prompt.new
    test = prompt.select("Please choose from the following available rooms:") do |room|
  
@@ -191,24 +158,8 @@ end
 def option_2
    update_booking
    end   
-# end
-
-# def select_room
-#    user_bookings = @user.bookings
-#    binding.pry
-#    puts "Currently booked: #{user_bookings}"
-#    prompt = TTY::Prompt.new
-#    prompt.select("Bookings:", %w(user_bookings))
-#      # update.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
-#    end 
 
 def update_booking
-   # puts "Please enter your sign-in name:"
-   # input = gets.chomp
-   # search = Guest.find_by(username: input)
-   # find_booking = Booking.find_by(guest_id: Guest.find_by(username: input).id)
-   # find_booking.update(room_id: 63)
-   # puts "Let's change your booking, #{input}"
       @user.rooms.each do |room|
         puts "Here is your booking: #{room.room_type}!".colorize(:yellow)
          end 
@@ -261,13 +212,7 @@ end
 
 def delete
    system "clear"
-   # result = Guest.all.find( @user.id)
-      # result.each do |room|
-      # puts "Here is your booking: #{room.room_type}!".colorize(:orange)
-      # end
-      # a = Guest.all.find(@user.id)
       Booking.delete(Booking.last.id)
-      # a.destroy
     puts "You have deleted your booking!".colorize(:cyan)
       # binding.pry
       welcome_menu
@@ -277,22 +222,6 @@ end
       system "clear"
       puts "Thank you for using my booking!".colorize(:cyan)
       exit
-   end 
-
-# Booking.find_by(guest_id: Guest.id)
-
-# def find_and_update_booking
-# room_id_num = Booking.last.room_id
-# booking_id = Booking.last.id
-# guest_id = Booking.all.find_by(guest_id: Guest.last).id
-# if guest_id == booking_id
-#   room_name = Room.all.find_by(id: room_id_num).room_type
-#    puts room_name
-
-# end 
-# end 
-# end 
-
-
+   end
 
 
