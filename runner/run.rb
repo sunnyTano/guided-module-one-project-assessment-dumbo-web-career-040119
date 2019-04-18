@@ -1,9 +1,14 @@
 require 'colorize'
 require 'pry'
 # require_relative '../app/models/guest'
+require 'date'
+
 
 def welcome
-   puts "Welcome to My Bookings!".colorize(:cyan)
+   art = TTY::Font.new(:starwars) 
+   puts art.write("Welcome")   
+   puts art.write("To")   
+   puts art.write("My Bookings!")   
 end 
 
 def signin
@@ -13,7 +18,24 @@ def signin
    @user = Guest.create(username: input)
 end 
 
-  def options
+
+def welcome_menu
+   prompt = TTY::Prompt.new
+    test = prompt.select("Please choose one of the following:") do |book|
+   #   book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
+# binding.pry
+     book.choice 'Book a Room!', 1
+     book.choice 'Exit', 2
+    end 
+   #  binding.pry
+     if test == 1
+         checkin_validator
+     else 
+         exit_method
+  end 
+end 
+
+  def main_menu
    prompt = TTY::Prompt.new
     test = prompt.select("Please choose one of the following:") do |book|
    #   book.enum '.' #The use of enums brings the advantage of type safety by assigning the numeric variable in a program with meaningful enum values. Enum is also called enumeration or an enumerator list.
@@ -24,9 +46,10 @@ end
      book.choice 'Delete Booking', 4
      book.choice 'Exit', 5
     end 
+
    #  binding.pry
      if test == 1
-         option_1
+         checkin_validator
      elsif test == 2
          option_2
      elsif test == 3
@@ -34,28 +57,78 @@ end
      elsif test == 4
          delete
      elsif test == 5
-         ex
+         exit_method
   end 
 end 
- 
-def option_1
-   system "clear"
-   # find_and_update_booking
+
+def checkin_validator
    prompt = TTY::Prompt.new
-   prompt.ask("Please type in a checkin date in the following format on the next line: (yyyy/mm/dd)")
+   prompt.ask("Please type in a checkin date in the following format on the next line: (yyyymmdd)")
    date1 = gets.chomp
+   checkin = ""
+   if date1 =~ /[0-9]/ && date1.size == 8 
+      date1 = Date.parse(date1).strftime("%Y%m%d")
+      checkin = "#{date1.to_date}"
    puts "Ok, your checkin date is #{date1.to_date}!".colorize(:magenta)
-   checkin = "#{date1.to_date}"
+   checkout_validator(checkin)
+   else  
+      puts "Invalid date format, try again please!"
+      sleep 2
+      checkin_validator
+   end 
+end
 
-   # booking.checkin_date = "#{date1.to_date}"
-   # binding.pry
-   # booking.checkin_date= Booking.update(checkin_date: date1.to_date)
-   # Booking.all.find_by(guest_id: Guest.find_by(name: name).id)
-
-   prompt.ask("Please type in a checkout date in the following format: (yyyy/mm/dd)")
+ def checkout_validator(checkin)
+   prompt = TTY::Prompt.new
+   prompt.ask("Please type in a checkout date in the following format: (yyyymmdd)")
    date2 = gets.chomp
-   checkout = date2.to_date
-   puts "Ok, your checkout date is #{date2.to_date}!".colorize(:magenta)
+   checkout = ""
+   if date2 =~ /[0-9]/ && date2.size == 8 && Date.parse(date2).strftime("%Y%m%d") != checkin
+      date2 = Date.parse(date2).strftime("%Y%m%d")
+      checkout = "#{date2.to_date}"
+   puts "Ok, your checkout date is #{checkout}!".colorize(:magenta)
+      option_1(checkin, checkout)
+   else  
+      puts "Invalid date format, try again please!"
+      sleep 2
+      checkout_validator
+   end 
+ end 
+
+def option_1(checkin, checkout)
+   system "clear"
+   # checkin_validator
+   # checkout_validator
+   # find_and_update_booking
+   # prompt = TTY::Prompt.new
+   # prompt.ask("Please type in a checkin date in the following format on the next line: (yyyymmdd)")
+   # date1 = gets.chomp
+   # checkin = ""
+   # if date1 =~ /[0-9]/ && date1.size == 8 
+   #    date1 = Date.parse(date1).strftime("%Y%m%d")
+   #    checkin = "#{date1.to_date}"
+   # puts "Ok, your checkin date is #{date1.to_date}!".colorize(:magenta)
+   # else  
+   #    puts "Invalid date format, try again please!"
+   #    sleep 3
+   #    option_1
+   # end 
+
+
+   # prompt.ask("Please type in a checkout date in the following format: (yyyymmdd)")
+   # date2 = gets.chomp
+   # checkin = ""
+   # if date2 =~ /[0-9]/ && date2.size == 8
+   #    date2 = Date.parse(date2).strftime("%Y%m%d")
+   #    checkout = "#{date2.to_date}"
+   # puts "Ok, your checkin date is #{date2.to_date}!".colorize(:magenta)
+   # else  
+   #    puts "Invalid date format, try again please!"
+   #    sleep 3
+   #    option_1
+   # end 
+   # puts "Ok, your checkout date is #{date2.to_date}!".colorize(:magenta)
+   prompt = TTY::Prompt.new
    test = prompt.select("Please choose from the following available rooms:") do |room|
  
    room.choice "#{Room.first.room_type}", 1
@@ -94,8 +167,9 @@ def option_1
    @user.bookings = []
    @user.bookings << Booking.new_booking(checkin, checkout, @user, temp)
    # binding.pry
-   options
+   main_menu
 end 
+
 
 def selected_room_one
    Room.first.room_type.colorize(:pink)
@@ -103,11 +177,11 @@ def selected_room_one
 end
 
 def selected_room_two
-   Room.all[1].room_type.colorize(:pink)
+   Room.second.room_type.colorize(:pink)
 end
 
 def selected_room_three
-   Room.all[2].room_type.colorize(:pink)
+   Room.third.room_type.colorize(:pink)
 end
 
 def selected_room_four
@@ -116,7 +190,7 @@ end
 
 def option_2
    update_booking
-   end   #  options
+   end   
 # end
 
 # def select_room
@@ -135,7 +209,7 @@ def update_booking
    # find_booking = Booking.find_by(guest_id: Guest.find_by(username: input).id)
    # find_booking.update(room_id: 63)
    # puts "Let's change your booking, #{input}"
-     result = @user.rooms.each do |room|
+      @user.rooms.each do |room|
         puts "Here is your booking: #{room.room_type}!".colorize(:yellow)
          end 
    user_bookings = @user.bookings
@@ -163,21 +237,17 @@ def update_booking
    end 
    #   binding.pry
      user_bookings.update(room_id: temp)
-     options
+     main_menu
 end
 
 def booking
    a = Booking.all.find_by(guest_id: @user.id)
-   # binding.pry
-   # @user.rooms.map do |room|
-   #    "#{room.room_type}"
-      # binding.pry
       a.room.room_type
-      options
+      # binding.pry
    end 
 
-
 def display_account_info
+   # puts Room.display_names
    system "clear"
    if @user.bookings.count == 0
       puts "You have no bookings!"
@@ -185,31 +255,30 @@ def display_account_info
       puts "Bookings:"
    end 
 puts booking
+main_menu
 # binding.pry  
 end
 
 def delete
    system "clear"
-   puts "Please enter your sign-in name:"
-   input = gets.chomp
-   search = Guest.find_by(username: input)
-   # find_booking = Booking.find_by(guest_id: Guest.find_by(username: input).id)
-   # find_booking.update(room_id: 63)
-   puts "Let's delete your booking, #{input}"
-     result = search.rooms.each do |room|
-        puts "Here is your booking: #{room.room_type}!".colorize(:orange)
-         end 
-   user_bookings = @user.bookings
-   user_bookings.destroy
+   # result = Guest.all.find( @user.id)
+      # result.each do |room|
+      # puts "Here is your booking: #{room.room_type}!".colorize(:orange)
+      # end
+      # a = Guest.all.find(@user.id)
+      Booking.delete(Booking.last.id)
+      # a.destroy
     puts "You have deleted your booking!".colorize(:cyan)
-    option
-   end 
+      # binding.pry
+      welcome_menu
+end
 
-   def ex
+   def exit_method
       system "clear"
       puts "Thank you for using my booking!".colorize(:cyan)
-      system("^C")
+      exit
    end 
+
 # Booking.find_by(guest_id: Guest.id)
 
 # def find_and_update_booking
@@ -219,6 +288,7 @@ def delete
 # if guest_id == booking_id
 #   room_name = Room.all.find_by(id: room_id_num).room_type
 #    puts room_name
+
 # end 
 # end 
 # end 

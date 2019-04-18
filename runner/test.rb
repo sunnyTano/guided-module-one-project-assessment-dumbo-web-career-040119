@@ -2,8 +2,16 @@ require_relative '../config/environment'
 require_relative './run.rb'
 
 welcome
-user = signin
-choice = options
+signin
+welcome_menu
+main_menu
+
+
+
+
+
+# user = signin
+# choice = options
 
     
 

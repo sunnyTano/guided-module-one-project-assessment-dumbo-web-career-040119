@@ -8,5 +8,6 @@ gem "require_all"
 gem "faker"
 gem 'tty-prompt' 
 gem 'colorize'
+gem 'tty-font'
 # gem "simple_calendar", "~> 2.0"
 

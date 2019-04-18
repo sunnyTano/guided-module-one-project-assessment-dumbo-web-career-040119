@@ -17,7 +17,7 @@ room4 = Room.create(room_type: "Great Standard Puppy Room", capacity: 4)
 Booking.create(checkin_date: "2019/01/20", checkout_date: "2019/02/21", guest_id: susan.id, room_id: room1.id)
 Booking.create(checkin_date: "2019/02/20", checkout_date: "2019/03/20", guest_id: jelly.id, room_id: room2.id)
 Booking.create(checkin_date: "2019/03/20", checkout_date: "2019/04/20", guest_id: joe.id, room_id: room3.id)
-Booking.create(checkin_date: "2019/04/20", checkout_date: "2019/05/20", guest_id: jelly.id, room_id: room4.id)
+# Booking.create(checkin_date: "2019/04/20", checkout_date: "2019/05/20", guest_id: jelly.id, room_id: room4.id)
 
 # checkin = {
 #     available: {"January" => ["1/11/20", "1/29/20"], "febuary" => ["2/1/20", "2/14/20"]},
