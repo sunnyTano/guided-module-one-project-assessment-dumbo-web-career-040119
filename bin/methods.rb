@@ -52,9 +52,9 @@ def login
        book.choice 'Retry loggin in', 1
        book.choice 'Signup', 2
       end 
-      if test == 1
+      case test == 1
          login
-     else 
+         else 
          signup
       end 
    end
@@ -68,7 +68,7 @@ def welcome_menu
      book.choice 'Exit', 2
     end 
    #  binding.pry
-     if test == 1
+      case test == 1
       checkin_validator
      else 
       exit_method
@@ -86,8 +86,10 @@ end
      book.choice 'Delete Booking', 4
      book.choice 'Exit', 5
     end 
+
+    
    #  binding.pry
-     if test == 1
+     case test == 1
          checkin_validator
      elsif test == 2
          option_2
@@ -140,11 +142,27 @@ end
       checkout_validator(checkin)
    end 
  end 
+   # if test == 1
+   #    # puts "You have picked #{selected_room_one}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
+   #    # temp = Room.first.id
+   #    find_room_name(first)
+   #    binding.pry
+   #    art = TTY::Font.new(:starwars) 
+   #    puts art.write("You Are Booked!")  
+   #    # new_user.room_id = Room.first.id
+   #    # binding.pry
+   # elsif test == 2
+
+ def find_room_name(index_num)
+   temp = Room.all[index_num].id
+   Room.find_by(id: temp).room_type
+end 
 
 def option_1(checkin, checkout)
    system "clear"
    prompt = TTY::Prompt.new
    # Room.display_names
+   # binding.pry
    test = prompt.select("Please choose from the following available rooms:") do |room|
    room.choice "#{Room.first.room_type}", 1
    # binding.pry
@@ -152,38 +170,58 @@ def option_1(checkin, checkout)
    room.choice "#{Room.third.room_type}", 3
    room.choice "#{Room.last.room_type}", 4
    end
-   # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: user.id)
-# binding.pry
+
    temp = 0
    system "clear"
-   if test == 1
-      puts "You have picked #{selected_room_one}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
-      temp = Room.first.id
-      art = TTY::Font.new(:starwars) 
-      puts art.write("You Are Booked!")  
-      # new_user.room_id = Room.first.id
-      # binding.pry
-   elsif test == 2
-      puts "You have picked #{selected_room_two}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
-      temp = Room.second.id
-      art = TTY::Font.new(:starwars) 
-      puts art.write("You Are Booked!")  
-      # booking.room_id = Room.all[1].id
-      # new_user.room_id = Room.all[1].id
-      # binding.pry
-   elsif test == 3
-      puts "You have picked #{selected_room_three}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
-      temp = Room.third.id
-      art = TTY::Font.new(:starwars) 
-      puts art.write("You Are Booked!")  
-   else test == 4
-      puts "You have picked #{selected_room_four}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
-      temp = Room.last.id
-      art = TTY::Font.new(:starwars) 
-      puts art.write("You Are Booked!")  
-      #binding.pry
-   end 
-   # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: @user.id, room_id: temp)
+   case test
+   when 1
+   # temp = Room.first.id
+   find_room_name(0)
+   # binding.pry
+   when 2
+   find_room_name(1)
+   when 3
+   # temp = Room.third.id
+   find_room_name(2)
+   when 4
+   # temp = Room.last.id
+   find_room_name(3)
+   end
+   # if test == 1
+   #    # puts "You have picked #{selected_room_one}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
+   #    # temp = Room.first.id
+   #    find_room_name(first)
+   #    binding.pry
+   #    art = TTY::Font.new(:starwars) 
+   #    puts art.write("You Are Booked!")  
+   #    # new_user.room_id = Room.first.id
+   #    # binding.pry
+   # elsif test == 2
+   #    puts "You have picked #{selected_room_two}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
+   #    temp = Room.second.id
+   #    art = TTY::Font.new(:starwars) 
+   #    puts art.write("You Are Booked!")  
+   #    # booking.room_id = Room.all[1].id
+   #    # new_user.room_id = Room.all[1].id
+   #    # binding.pry
+   # elsif test == 3
+   #    puts "You have picked #{selected_room_three}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
+   #    temp = Room.third.id
+   #    art = TTY::Font.new(:starwars) 
+   #    puts art.write("You Are Booked!")  
+   # else test == 4
+   #    puts "You have picked #{selected_room_four}. You are booked from #{checkin} until #{checkout}!".colorize(:cyan)
+   #    temp = Room.last.id
+   #    art = TTY::Font.new(:starwars) 
+   #    puts art.write("You Are Booked!")  
+   #    #binding.pry
+   # end 
+
+     # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: user.id)
+# binding.pry
+        # MAKE THIS MORE DRY DO NOT USE IF ELSE STATEMENTS FOR THIS 
+  # new_user = Booking.create(checkin_date: checkin, checkout_date: checkout, guest_id: @user.id, room_id: temp)
+   
    @user.bookings = []
    @user.bookings << Booking.new_booking(checkin, checkout, @user, temp)
    # binding.pry
@@ -215,7 +253,7 @@ def update_booking
       @user.rooms.each do |room|
         puts "Here is your booking: #{room.room_type}!".colorize(:yellow)
          end 
-   user_bookings = @user.bookings
+      user_bookings = @user.bookings
       prompt = TTY::Prompt.new
       test = prompt.select("Please choose a new room:") do |update|
          # binding.pry
@@ -230,10 +268,10 @@ def update_booking
       temp = Room.first.id
    elsif test == 2
       puts "You have picked #{selected_room_two}!".colorize(:magenta)
-      temp = Room.all[1].id
+      temp = Room.second.id
    elsif test == 3
       puts "You have picked #{selected_room_three}!".colorize(:magenta)
-      temp = Room.all[2].id
+      temp = Room.third.id
    else test == 4
       puts "You have picked #{selected_room_four}!".colorize(:magenta)
       temp = Room.last.id
@@ -280,7 +318,7 @@ end
 def delete
    system "clear"
       Booking.delete(Booking.last.id)
-    puts "You have deleted your booking!".colorize(:cyan)
+      puts "You have deleted your booking!".colorize(:cyan)
       # binding.pry
       welcome_menu
 end
